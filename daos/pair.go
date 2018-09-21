@@ -67,6 +67,7 @@ func (dao *PairDao) Create(pair *types.Pair) error {
 // GetAll function fetches all the pairs in the pair collection of mongodb.
 func (dao *PairDao) GetAll() ([]types.Pair, error) {
 	var response []types.Pair
+	// 0 mean no limit
 	err := db.Get(dao.dbName, dao.collectionName, bson.M{}, 0, 0, &response)
 	return response, err
 }

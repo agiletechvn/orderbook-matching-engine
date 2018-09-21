@@ -1,10 +1,10 @@
 # matching-engine
+
 Official proof decentralized exchange matching engine
 
 # The Proof Decentralized Exchange
 
 The proof decentralized exchange is a hybrid decentralized exchange that aims at bringing together the ease of use of centralized exchanges along with the security and privacy features of decentralized exchanges. Orders are matched through the an off-chain orderbook. After orders are matched and signed, the decentralized exchange operator has the sole ability to perform a transaction to the smart contract. This provides for the best UX as the exchange operator is the only party having to interact directly with the blockchain. Exchange users simply sign orders which are broadcasted then to the orderbook. This design enables users to queue and cancel their orders seamlessly.
-
 
 # Getting Started
 
@@ -18,21 +18,33 @@ The proof decentralized exchange is a hybrid decentralized exchange that aims at
 ## Booting up the server
 
 **Install the dependencies**
+
 ```
 dep ensure
 ```
 
 **Start the Server**
+
 ```
 go run server.go
+```
+
+**Start the development**
+
+```
+docker-compose up rabbitmq redis mongodb mongodb-seed
+# start the server in hot-reload mode
+BIN_APP_PORT=8081 GIN_BUILD_ARGS="server.go" gin run serve
 ```
 
 # API Endpoints
 
 ## Tokens
+
 - `GET /tokens` : returns list of all the tokens from the database
 - `GET /tokens/<addr>`: returns details of a token from db using token's contract address
 - `POST /tokens`: Create/Insert token in DB. Sample input:
+
 ```
 {
 	"name":"HotPotCoin",
@@ -45,10 +57,12 @@ go run server.go
 ```
 
 ## Pairs
+
 - `GET /pairs` : returns list of all the pairs from the database
 - `GET /pairs/<baseToken>/<quoteToken>`: returns details of a pair from db using using contract address of its constituting tokens
 - `GET /pairs/book/<pairName>`: Returns orderbook for the pair using pair name
 - `POST /pairs`: Create/Insert pair in DB. Sample input:
+
 ```
 {
     "baseToken":"5b3e82587b44576ba8000001",
@@ -56,11 +70,12 @@ go run server.go
     "active":true,
     "quoteTokenSymbol":"hpc"
 }
-
 ```
 
 ## Address
+
 - `POST /address`: Create/Insert address and corresponding balance entry in DB. Sample input:
+
 ```
 {
 	"address":"0xefD7eB287CeeFCE8256Dd46e25F398acEA7C4b63"
@@ -68,15 +83,19 @@ go run server.go
 ```
 
 ## Balance
+
 - `GET /balances/<addr>`: Fetch the balance details from db of the given address.
 
 ## Order
+
 - `GET /orders/<addr>`: Fetch all the orders placed by the given address
 
 ## Trade
+
 - `GET /trades/history/<pair>`: Fetch complete trade history of given pair using pair name
 - `GET /trades/<addr>`: Fetch all the trades in which the given address is either maker or taker
 - `GET /trades/ticks`: Fetch ohlcv data. Query Params:
+
 ```
 // Query Params for /trades/ticks
 pairName: names of pair separated by comma(,) ex: "hpc/aut,abc/xyz". (Atleast 1 Required)
@@ -118,10 +137,10 @@ orderbook requires (pairID, amount, price).
 The conversion between both systems can be found in the engine.ComputeOrderPrice
 function
 
-
 **Order Hash**
 
 The order hash is a sha-256 hash of the following elements:
+
 - Exchange address
 - Token Buy address
 - Amount Buy
@@ -130,7 +149,6 @@ The order hash is a sha-256 hash of the following elements:
 - Expires
 - Nonce
 - Maker Address
-
 
 ## Trades
 
@@ -148,11 +166,11 @@ to sign a trade object that matches an order.
 Trade Hash:
 
 The trade hash is a sha-256 hash of the following elements:
+
 - Order Hash
 - Amount
 - Taker Address
 - Trade Nonce
-
 
 The (Order, Trade) tuple can then be used to perform an on-chain transaction for this trade.
 
@@ -167,12 +185,9 @@ base tokens and quote tokens under the following principles:
 
 Token pairs are identified by an ID (a hash of both token addresses)
 
-
-
 # Websocket API
 
 See [WEBSOCKET_API.md](WEBSOCKET_API.md)
-
 
 # Contribution
 

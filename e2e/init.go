@@ -60,6 +60,8 @@ func Init(t *testing.T) {
 	// accounts := testAccount(t, tokens)
 	// testWS(t, pair, accounts)
 	// address := testAddress(t, tokens)
+
+	// t.Logf("Token %s", tokens)
 }
 
 func NewRouter() *mux.Router {
